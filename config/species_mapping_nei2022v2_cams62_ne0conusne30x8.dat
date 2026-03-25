@@ -1,0 +1,55 @@
+# Modified for CAMSv6.2 merging with NEI2022v2 on Feb. 21 2026: change 'ketones' to 'total-ketones'
+# Contains three parts 
+# (1) File locations & species setup
+# Note "SPC" in Destination_fileformat, "SPC" will be replaced by CESM species name
+# (2) mapping equations (yields can be either mass or molar yield)
+# Format: CESM_species[molecular weight] = yield*emission_inventory_species mass/molar sector vert
+# (3) molecular weights of species for emission species 
+# -> this is for the case that original emission files have wrong molecular weights or no information. 
+# === File locations Start ===
+Source_fileformat = '/path/to/regridded_species/Y2023_CAMS-GLOB-ANTv6.2_conusNEI2022v2_ne0CONUSne30x8_*_c20260224.nc'
+Destination_fileformat = '/path/to/mapped_species/Y2023_CAMS-GLOB-ANTv6.2_conusNEI2022v2_ne0CONUSne30x8_SPC_c20260224.nc'
+Source_unit = 'kg m-2 s-1'
+Destination_unit = 'molecules cm-2 s-1'
+# species_list = 'All'
+species_list = ['CO']
+# === File locations End ===
+# === Mapping equations Start ===
+CO[28]       = 1.0*co                molar  [sum]   {sfc}
+NH3[17]      = 1.0*nh3               molar  [sum]   {sfc}
+NO[30]       = 1.0*nox               molar  [sum]   {sfc}
+SO2[64]      = 0.975*so2             molar  [sum]   {sfc}
+C2H6[30]     = 1.0*ethane            molar  [sum]   {sfc}
+C3H8[44]     = 1.0*propane           molar  [sum]   {sfc}
+C2H4[28]     = 1.0*ethene            molar  [sum]   {sfc}
+C3H6[42]     = 1.0*propene           molar  [sum]   {sfc}
+C2H2[26]     = 1.0*acetylene         molar  [sum]   {sfc}
+BIGENE[56]   = 1.0*other-alkenes-and-alkynes   molar  [sum]   {sfc}
+BENZENE[78]  = 1.0*benzene           molar  [sum]   {sfc}
+TOLUENE[92]  = 1.0*toluene           molar  [sum]   {sfc}
+XYLENES[106] = 1.0*xylene            molar  [sum]   {sfc}
+CH2O[30]     = 1.0*formaldehyde      molar  [sum]   {sfc}
+CH3OH[32]    = 0.15*alcohols         molar  [sum]   {sfc}
+C2H5OH[46]   = 0.85*alcohols         molar  [sum]   {sfc}
+CH3COCH3[58] = 0.2*total-ketones           molar  [sum]   {sfc}
+MEK[72]      = 0.8*total-ketones           molar  [sum]   {sfc}
+HCN[27]      = 0.006*co               mass  [res,awb]   {sfc}
+CH3CN[41]    = 0.002*co               mass  [res,awb]   {sfc}
+ISOP[68]     = 1.0*isoprene          molar  [sum]   {sfc}
+MTERP[136]   = 1.0*monoterpenes      molar  [sum]   {sfc}
+SVOC[310]    = 0.6*1.4*oc             mass  [sum]   {sfc}
+bc_a4[12]    = 1.0*bc                 mass  [sum]   {sfc}
+pom_a4[12]   = 1.4*oc                 mass  [sum]   {sfc}
+so4_a1_ene_vertical[96]        =   0.025*so2      molar   [ene,ind]   {vert}   [0.025,0.075,0.125,0.175,0.225,0.275,0.325,0.375]   [0,0,0.25,0.25,0.25,0.25,0,0]
+so4_a1_ag_ship_fef[96]         =   0.025*so2      molar   [awb,shp,fef]   {sfc}
+so4_a2_res_trs[96]             =   0.025*so2      molar   [tnr,tro,res]   {sfc}   
+num_so4_a1_ene_vertical[96]    =   0.025*so2      molar   [ene,ind]   {vert}   [0.025,0.075,0.125,0.175,0.225,0.275,0.325,0.375]   [0,0,0.25,0.25,0.25,0.25,0,0]   0.261e-6   1770
+num_so4_a1_ag[96]              =   0.025*so2      molar   [awb]   {sfc}   0.134e-6   1770
+num_so4_a1_ship_fef[96]        =   0.025*so2      molar   [shp,fef]   {sfc}   0.261e-6   1770   
+num_so4_a2_res_trs[96]         =   0.025*so2      molar   [tnr,tro,res]   {sfc}   0.0504e-6   1770
+num_bc_a4[12]                  =     1.0*bc       molar   [sum]   {sfc}   0.261e-6   1700
+num_pom_a4[12]                 =     1.4*oc       molar   [sum]   {sfc}   0.261e-6   1000
+# === Mapping equations End ===
+# === Molecular weights (from emission inventory) Start ===
+propene = 42
+# === Molecular weights (from emission inventory) End ===

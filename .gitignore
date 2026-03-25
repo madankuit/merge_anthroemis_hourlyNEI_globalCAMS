@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.DS_Store
+config/paths.json
+*.zarr/
+*.out
+*.err

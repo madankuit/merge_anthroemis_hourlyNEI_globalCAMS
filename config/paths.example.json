@@ -1,0 +1,42 @@
+{
+  "workflow": {
+    "start_datetime": "2023-01-01T00:00:00",
+    "end_datetime": "2023-12-30T23:00:00",
+    "nei_actual_year": 2022,
+    "output_year": 2023,
+    "date_tag": "c20260224"
+  },
+  "paths": {
+    "nei_hourly_dir": "/path/to/NEI2022v2_T1_CONUS_output_01deg",
+    "cams_orig_dir": "/path/to/CAMS-GLOB-ANT_v6.2_orig",
+    "merged_hourly_dir": "/path/to/globCAMS_conusNEI_01deg/2023_hourly_timeFixed",
+    "merged_hourly_needs_timefix_dir": "/path/to/globCAMS_conusNEI_01deg/2023_hourly_NeedsCorrection",
+    "merged_by_species_dir": "/path/to/globCAMS_conusNEI_01deg/2023_GroupBySpecies",
+    "map_npz": "/path/to/CAMSgrid_to_NEIgrid_CONUSlower48_80kmBuffer_map.npz",
+    "regridded_output_dir": "/path/to/globCAMS_conusNEI_ne0CONUSne30x8/2023_CAMSSpecies",
+    "cams_grid_file": "/path/to/FV_gridinfo_CAMS_c20210219.nc",
+    "serr_scrip_file": "/path/to/ne0CONUS_ne30x8_np4_SCRIP.nc",
+    "regridding_weights_file": "/path/to/ESMFmap_0.1x0.1_ne0CONUSne30x8_cubit_conserve_cams.nc",
+    "ncar_packages_dir": "/path/to/NCAR_packages"
+  },
+  "combine": {
+    "write_final_netcdf": true,
+    "dask_n_workers": 4,
+    "dask_threads_per_worker": 2,
+    "dask_memory_limit": "8GB",
+    "dask_chunks": {
+      "time": 24,
+      "lat": 200,
+      "lon": 200
+    },
+    "compression_level": 1,
+    "species_subset": []
+  },
+  "merge": {
+    "distance_cutoff_deg": 0.125,
+    "species_subset": []
+  },
+  "regrid": {
+    "species_subset": []
+  }
+}

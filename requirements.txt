@@ -1,0 +1,6 @@
+numpy
+pandas
+xarray
+netcdf4
+dask[distributed]
+python-dateutil
