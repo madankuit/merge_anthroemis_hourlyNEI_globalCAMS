@@ -20,7 +20,7 @@ import xarray as xr
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
-from nei_merge.config import load_json_config, require_keys
+from nei_merge.settings import load_settings
 from nei_merge.time_shift import NEIfileDatetime_shift_BACKWARD, NEIfileDatetime_shift_BYweekofday
 
 
@@ -174,17 +174,10 @@ def main() -> None:
     p.add_argument("--config", default=str(REPO_ROOT / "config" / "paths.json"))
     args = p.parse_args()
 
-    cfg = load_json_config(args.config)
-    require_keys(cfg, ["workflow", "paths", "merge"], "root config")
-
-    workflow = cfg["workflow"]
-    paths = cfg["paths"]
-    require_keys(
-        workflow,
-        ["start_datetime", "end_datetime", "nei_actual_year", "output_year"],
-        "workflow",
-    )
-    require_keys(paths, ["nei_hourly_dir", "cams_orig_dir", "merged_hourly_dir", "map_npz"], "paths")
+    settings = load_settings(args.config)
+    cfg = settings.raw
+    workflow = settings.workflow
+    paths = settings.paths
 
     start_u = workflow["start_datetime"].replace("T", "_")
     end_u = workflow["end_datetime"].replace("T", "_")

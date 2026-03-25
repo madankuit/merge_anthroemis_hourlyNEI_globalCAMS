@@ -23,6 +23,7 @@ All paths are supplied through external config:
 - `scripts/04_regrid_to_ne0conusne30x8.py`
 - `scripts/run_merge_slurm.sh`
 - `src/nei_merge/` shared helper modules
+- `src/nei_merge/settings.py` single config loader used by all scripts
 - `config/paths.example.json` path + runtime settings template
 - `config/species_mapping_template.dat`
 - `originals/` archived source scripts used to build this repo

@@ -1,1 +1,1 @@
-"""Utilities for the NEI2022v2 + CAMS merge workflow."""
+"""Utilities for hourly anthropogenic-emissions merge workflows."""

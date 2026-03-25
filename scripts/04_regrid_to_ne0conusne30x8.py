@@ -18,7 +18,7 @@ import xarray as xr
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
-from nei_merge.config import load_json_config, require_keys
+from nei_merge.settings import load_settings
 
 
 def get_spc_and_spcfiles(file_list: Iterable[str]) -> Tuple[List[str], Dict[str, str]]:
@@ -45,23 +45,10 @@ def main() -> None:
     p.add_argument("--config", default=str(REPO_ROOT / "config" / "paths.json"))
     args = p.parse_args()
 
-    cfg = load_json_config(args.config)
-    require_keys(cfg, ["workflow", "paths", "regrid"], "root config")
-
-    paths = cfg["paths"]
-    workflow = cfg["workflow"]
-    require_keys(
-        paths,
-        [
-            "merged_by_species_dir",
-            "regridded_output_dir",
-            "cams_grid_file",
-            "serr_scrip_file",
-            "regridding_weights_file",
-            "ncar_packages_dir",
-        ],
-        "paths",
-    )
+    settings = load_settings(args.config)
+    cfg = settings.raw
+    paths = settings.paths
+    workflow = settings.workflow
 
     sys.path.insert(0, paths["ncar_packages_dir"])
     from dsj.analysis.Regridding_ESMF import Regridding

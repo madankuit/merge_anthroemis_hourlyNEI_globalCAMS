@@ -18,7 +18,7 @@ from dask.distributed import Client, LocalCluster
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
-from nei_merge.config import load_json_config, require_keys
+from nei_merge.settings import load_settings
 from nei_merge.find_missing_files import find_missing_files_v2
 
 warnings.filterwarnings("ignore", message="The specified chunks separate the stored chunks")
@@ -163,12 +163,9 @@ def main() -> None:
     p.add_argument("--config", default=str(REPO_ROOT / "config" / "paths.json"))
     args = p.parse_args()
 
-    cfg = load_json_config(args.config)
-    require_keys(cfg, ["workflow", "paths", "combine"], "root config")
-    require_keys(cfg["workflow"], ["start_datetime", "end_datetime", "output_year", "date_tag"], "workflow")
-    require_keys(cfg["paths"], ["merged_hourly_dir", "merged_by_species_dir"], "paths")
-
-    combine_cfg = cfg["combine"]
+    settings = load_settings(args.config)
+    cfg = settings.raw
+    combine_cfg = settings.combine
     chunks = combine_cfg.get("dask_chunks", {"time": 24, "lat": 200, "lon": 200})
     compression = int(combine_cfg.get("compression_level", 1))
 

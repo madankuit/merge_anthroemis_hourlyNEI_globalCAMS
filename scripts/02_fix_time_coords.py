@@ -16,7 +16,7 @@ import xarray as xr
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
-from nei_merge.config import load_json_config, require_keys
+from nei_merge.settings import load_settings
 
 
 def main() -> None:
@@ -24,9 +24,8 @@ def main() -> None:
     p.add_argument("--config", default=str(REPO_ROOT / "config" / "paths.json"))
     args = p.parse_args()
 
-    cfg = load_json_config(args.config)
-    paths = cfg["paths"]
-    require_keys(paths, ["merged_hourly_needs_timefix_dir", "merged_hourly_dir"], "paths")
+    settings = load_settings(args.config)
+    paths = settings.paths
 
     in_dir = paths["merged_hourly_needs_timefix_dir"]
     out_dir = paths["merged_hourly_dir"]
