@@ -1,6 +1,6 @@
-# NEI2022v2-CAMS CONUS Merge Workflow
+# merge_anthroemis_hourlyNEI_globalCAMS
 
-Repository for documenting and running the NEI2022v2 + CAMS-GLOB-ANTv6.2 workflow used to:
+Repository for documenting and running a general workflow to merge hourly CONUS NEI emissions into global CAMS anthropogenic emissions inventories.
 
 1. Merge hourly CONUS NEI emissions into global CAMS emissions (with buffered CONUS mapping)
 2. Fix hourly time coordinates from filename timestamps
@@ -24,7 +24,7 @@ All paths are supplied through external config:
 - `scripts/run_merge_slurm.sh`
 - `src/nei_merge/` shared helper modules
 - `config/paths.example.json` path + runtime settings template
-- `config/species_mapping_nei2022v2_cams62_ne0conusne30x8.dat`
+- `config/species_mapping_template.dat`
 - `originals/` archived source scripts used to build this repo
 - `docs/PROJECT_INVENTORY.md` project/code inventory
 
@@ -36,7 +36,7 @@ All paths are supplied through external config:
 cp config/paths.example.json config/paths.json
 ```
 
-2. Edit `config/paths.json` with your real directories/files.
+2. Edit `config/paths.json` with your real directories/files and naming tokens (`inventory_name`, `merge_token`, `merged_label`, `cams_label`, `target_grid_label`).
 
 3. Run stages:
 

@@ -65,12 +65,12 @@ def make_encoding(ds: xr.Dataset, chunks: dict, level: int) -> dict:
     return out
 
 
-def parse_time_from_filename(path: str) -> pd.Timestamp:
+def parse_time_from_filename(path: str, merge_token: str) -> pd.Timestamp:
     base = os.path.basename(path)
     stem = base[:-3]
     parts = stem.split("_")
     dt_str = parts[-2] + "_" + parts[-1]
-    return pd.to_datetime(dt_str, format="conusNEI2022v2WDKadjusted_%Y-%m-%dT%H:%M:%S")
+    return pd.to_datetime(dt_str, format=f"{merge_token}_%Y-%m-%dT%H:%M:%S")
 
 
 def process_species(species: str, cfg: dict, chunks: dict, compression: int) -> None:
@@ -78,6 +78,9 @@ def process_species(species: str, cfg: dict, chunks: dict, compression: int) -> 
     paths = cfg["paths"]
     date_tag = workflow["date_tag"]
     year = int(workflow["output_year"])
+    cams_label = workflow.get("cams_label", "CAMS-GLOB-ANTv6.2")
+    merged_label = workflow.get("merged_label", "conusNEI2022v2")
+    merge_token = workflow.get("merge_token", "conusNEI2022v2WDKadjusted")
 
     in_dir = paths["merged_hourly_dir"]
     out_dir = paths["merged_by_species_dir"]
@@ -85,13 +88,13 @@ def process_species(species: str, cfg: dict, chunks: dict, compression: int) -> 
     os.makedirs(out_dir, exist_ok=True)
     os.makedirs(zarr_dir, exist_ok=True)
 
-    output_file = f"Y{year}_CAMS-GLOB-ANTv6.2_conusNEI2022v2_01deg_{species}_{date_tag}.nc"
+    output_file = f"Y{year}_{cams_label}_{merged_label}_01deg_{species}_{date_tag}.nc"
     outpath = os.path.join(out_dir, output_file)
     if os.path.exists(outpath):
         print(f"{species}: already exists, skipping")
         return
 
-    file_prefix = f"CAMS-GLOB-ANT_Glb_0.1x0.1_anthro_{species}_v6.2_monthly_conusNEI2022v2WDKadjusted"
+    file_prefix = f"CAMS-GLOB-ANT_Glb_0.1x0.1_anthro_{species}_v6.2_monthly_{merge_token}"
     files_dic = find_missing_files_v2(
         workflow["start_datetime"], workflow["end_datetime"], in_dir + "/", file_prefix, ".nc"
     )
@@ -101,11 +104,11 @@ def process_species(species: str, cfg: dict, chunks: dict, compression: int) -> 
         print(f"{species}: STOP missing {len(missing)} files")
         return
 
-    times = [parse_time_from_filename(f) for f in expected]
+    times = [parse_time_from_filename(f, merge_token) for f in expected]
     df = pd.DataFrame({"file": expected, "time": times}).sort_values("time")
     df["month"] = df["time"].dt.to_period("M")
 
-    zarr_store = os.path.join(zarr_dir, f"Y{year}_{species}_{date_tag}.zarr")
+    zarr_store = os.path.join(zarr_dir, f"Y{year}_{merged_label}_{species}_{date_tag}.zarr")
     if os.path.exists(zarr_store):
         shutil.rmtree(zarr_store)
 

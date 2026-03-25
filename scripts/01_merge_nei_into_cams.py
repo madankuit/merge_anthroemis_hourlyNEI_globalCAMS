@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Merge hourly CONUS NEI2022v2 emissions into global CAMS-GLOB-ANT v6.2 files.
+"""Merge hourly CONUS NEI emissions into global CAMS files.
 
 All machine-specific paths are loaded from an external JSON config.
 """
@@ -99,6 +99,8 @@ def process_one(cams_species: str, nei_file: str, cfg: dict, map_data: dict[str,
     workflow = cfg["workflow"]
     paths = cfg["paths"]
     output_year = int(workflow["output_year"])
+    merge_token = workflow.get("merge_token", "conusNEI2022v2WDKadjusted")
+    inventory_name = workflow.get("inventory_name", "NEI")
 
     search_str = f"_{cams_species}_"
     cams_matches = glob.glob(os.path.join(paths["cams_orig_dir"], f"*{search_str}*"))
@@ -116,7 +118,7 @@ def process_one(cams_species: str, nei_file: str, cfg: dict, map_data: dict[str,
     os.makedirs(out_dir, exist_ok=True)
 
     fn_base, ext = os.path.splitext(os.path.basename(cams_file))
-    out_name = f"{fn_base}_conusNEI2022v2WDKadjusted_{str(dt64)[:19]}{ext}"
+    out_name = f"{fn_base}_{merge_token}_{str(dt64)[:19]}{ext}"
     out_path = os.path.join(out_dir, out_name)
     if os.path.exists(out_path):
         print(f"Skip existing: {out_name}")
@@ -158,7 +160,7 @@ def process_one(cams_species: str, nei_file: str, cfg: dict, map_data: dict[str,
 
     long_name = merged["sum"].attrs.get("long_name", "sum")
     merged["sum"].attrs["long_name"] = (
-        f"{long_name} (merged Y{output_year} global CAMSv6.2 with CONUS NEI2022v2, weekday/weekend adjusted)"
+        f"{long_name} (merged Y{output_year} global CAMS with CONUS {inventory_name}, weekday/weekend adjusted)"
     )
 
     merged.to_netcdf(out_path)

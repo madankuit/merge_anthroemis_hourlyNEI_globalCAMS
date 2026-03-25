@@ -68,9 +68,12 @@ def main() -> None:
 
     date_tag = workflow["date_tag"]
     year = int(workflow["output_year"])
+    cams_label = workflow.get("cams_label", "CAMS-GLOB-ANTv6.2")
+    merged_label = workflow.get("merged_label", "conusNEI2022v2")
+    target_grid_label = workflow.get("target_grid_label", "ne0CONUSne30x8")
 
     file_dir = paths["merged_by_species_dir"]
-    pattern = f"Y{year}_CAMS-GLOB-ANTv6.2_conusNEI2022v2_01deg_*_{date_tag}.nc"
+    pattern = f"Y{year}_{cams_label}_{merged_label}_01deg_*_{date_tag}.nc"
     file_list = [
         f for f in glob.glob(os.path.join(file_dir, pattern)) if fnmatch.fnmatch(os.path.basename(f), pattern)
     ]
@@ -83,7 +86,7 @@ def main() -> None:
     os.makedirs(paths["regridded_output_dir"], exist_ok=True)
     dst_fmt = os.path.join(
         paths["regridded_output_dir"],
-        f"Y{year}_CAMS-GLOB-ANTv6.2_conusNEI2022v2_ne0CONUSne30x8_SPC_{date_tag}.nc",
+        f"Y{year}_{cams_label}_{merged_label}_{target_grid_label}_SPC_{date_tag}.nc",
     )
 
     for sp in species:
