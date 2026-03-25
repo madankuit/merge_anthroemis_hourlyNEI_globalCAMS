@@ -12,17 +12,17 @@
     "target_grid_label": "ne0CONUSne30x8"
   },
   "paths": {
-    "nei_hourly_dir": "/path/to/hourly_nei_conus_01deg",
-    "cams_orig_dir": "/path/to/CAMS-GLOB-ANT_v6.2_orig",
-    "merged_hourly_dir": "/path/to/globCAMS_conusNEI_01deg/2023_hourly_timeFixed",
-    "merged_hourly_needs_timefix_dir": "/path/to/globCAMS_conusNEI_01deg/2023_hourly_NeedsCorrection",
-    "merged_by_species_dir": "/path/to/globCAMS_conusNEI_01deg/2023_GroupBySpecies",
-    "map_npz": "/path/to/CAMSgrid_to_NEIgrid_CONUSlower48_80kmBuffer_map.npz",
-    "regridded_output_dir": "/path/to/globCAMS_conusNEI_ne0CONUSne30x8/2023_CAMSSpecies",
-    "cams_grid_file": "/path/to/FV_gridinfo_CAMS_c20210219.nc",
-    "serr_scrip_file": "/path/to/ne0CONUS_ne30x8_np4_SCRIP.nc",
-    "regridding_weights_file": "/path/to/ESMFmap_0.1x0.1_ne0CONUSne30x8_cubit_conserve_cams.nc",
-    "ncar_packages_dir": "/path/to/NCAR_packages"
+    "nei_hourly_dir": "/net/fs09/d0/taoma528/CESM22/CAMS_withCONUS2022v2NEI/NEI2022v2_T1_CONUS_output_01deg",
+    "cams_orig_dir": "/net/fs09/d0/taoma528/ncar_copies/acom/MUSICA/emissions/cams/CAMS-GLOB-ANT_v6.2/CAMS-GLOB-ANT_v6.2_orig",
+    "merged_hourly_dir": "/net/fs09/d0/taoma528/CESM22/CAMS6.2_withCONUS2022v2NEI/globCAMS_conusNEI_01deg/2023_hourly_timeFixed",
+    "merged_hourly_needs_timefix_dir": "/net/fs09/d0/taoma528/CESM22/CAMS6.2_withCONUS2022v2NEI/globCAMS_conusNEI_01deg/2023_hourly_NeedsCorrection",
+    "merged_by_species_dir": "/net/fs09/d0/taoma528/CESM22/CAMS6.2_withCONUS2022v2NEI/globCAMS_conusNEI_01deg/2023_GroupBySpecies",
+    "map_npz": "/net/fs09/d0/taoma528/CESM22/GeographicMasks/CAMSgrid_to_NEIgrid_CONUSlower48_80kmBuffer_map.npz",
+    "regridded_output_dir": "/net/fs09/d0/taoma528/CESM22/CAMS6.2_withCONUS2022v2NEI/globCAMS_conusNEI_ne0CONUSne30x8/2023_CAMSSpecies",
+    "cams_grid_file": "/net/fs09/d0/taoma528/CESM22/grids/FV_gridinfo_CAMS_c20210219.nc",
+    "serr_scrip_file": "/net/fs09/d0/taoma528/CESM22/grids/ne0CONUS_ne30x8_np4_SCRIP.nc",
+    "regridding_weights_file": "/net/fs09/d0/taoma528/CESM22/grids/ESMFmap_0.1x0.1_ne0CONUSne30x8_cubit_conserve_cams.nc",
+    "ncar_packages_dir": "/home/taoma528/Scripts/CESM_analysis/ACP_MUSICANEI_scripts/anthroemis_MergeNEI2017_to_CAMS/NCAR_packages"
   },
   "combine": {
     "write_final_netcdf": true,

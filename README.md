@@ -1,55 +1,167 @@
 # merge_anthroemis_hourlyNEI_globalCAMS
 
-Repository for documenting and running a general workflow to merge hourly CONUS NEI emissions into global CAMS anthropogenic emissions inventories.
+Generalized workflow to process hourly NEI anthropogenic emissions and merge them into global CAMS anthropogenic inventories, then prepare model-ready files on `ne0CONUSne30x8`.
 
-1. Merge hourly CONUS NEI emissions into global CAMS emissions (with buffered CONUS mapping)
-2. Fix hourly time coordinates from filename timestamps
-3. Combine hourly merged files into yearly per-species files
-4. Regrid species files to `ne0CONUSne30x8`
+## Process_NEI2022v2_mergewithCAMS
 
-## Design Principle
+Goal: process all dates/hours for NEI 2022v2 and merge with CAMS-GLOB-ANT v6.2 over CONUS, following the ACP-paper methodology.
 
-No machine-specific paths are hardcoded in workflow scripts.
-All paths are supplied through external config:
+### Step 1: Preprocess NEI emissions
 
-- `config/paths.example.json` (template in repo)
-- `config/paths.json` (your local/private file, gitignored)
+Process NEI2022v2 to regular `0.1° x 0.1°` CONUS grid using `epa_anthro_emis` preprocessor.
 
-## Repository Layout
+Reference from NEI2017 (T1 mechanism):
 
-- `scripts/01_merge_nei_into_cams.py`
-- `scripts/02_fix_time_coords.py`
-- `scripts/03_combine_hourly_species_yearly.py`
-- `scripts/04_regrid_to_ne0conusne30x8.py`
-- `scripts/run_merge_slurm.sh`
-- `src/nei_merge/` shared helper modules
-- `src/nei_merge/settings.py` single config loader used by all scripts
-- `config/paths.example.json` path + runtime settings template
-- `config/species_mapping_template.dat`
-- `originals/` archived source scripts used to build this repo
-- `docs/PROJECT_INVENTORY.md` project/code inventory
+`/net/fs09/d0/taoma528/CESM22/CAMS_withCONUS2017NEI/2017NEI_01latlon`
 
-## Quick Start
+One-day trial reference:
 
-1. Create your private config file:
+`ProcessThenCompare_NEI2017_vs_NEI2022v2_additionalspecies`
+
+Mechanism decision: use `T1` to stay consistent with NEI2017 workflow.
+
+### Step 2: Unit conversion and merge with CAMS
+
+Convert NEI units to CAMS-compatible units and replace CAMS emissions over CONUS with NEI (hourly within ~80 km coastal buffer); keep CAMS monthly elsewhere.
+
+Unit context:
+
+- CAMS: `kg m-2 s-1`
+- NEI: `mol km^-2 hr^-1`
+- NEI particulate (BC, OC, PM10, PM25): `ug m^-2 s^-1`
+
+### Step 3: Combine hourly files by species
+
+Aggregate hourly Step-2 outputs to one file per species in CAM-chem-friendly format.
+
+### Step 4: Regridding
+
+Regrid Step-3 files to `ne0CONUSne30x8`.
+
+### Step 5: Species mapping
+
+Apply species mapping for CAM-chem mechanism consistency.
+
+## Operational Notes (Derecho <-> Svante)
+
+### Copy CAMS v6.2 from Derecho to Svante
+
+On Derecho:
+
+```bash
+rsync -avz --progress -e ssh /glade/campaign/acom/acom-da/Global_Emissions/CAMS-GLOB-ANT_v6.2/* taoma528@svante9.mit.edu:/net/fs09/d0/taoma528/ncar_copies/acom/MUSICA/emissions/cams/CAMS-GLOB-ANT_v6.2/CAMS-GLOB-ANT_v6.2_orig/
+```
+
+### Copy 0.1-degree domain file to Derecho
+
+```bash
+rsync -avzL --exclude=".*" -e ssh "taoma528@svante9.mit.edu:/net/fs09/d0/taoma528/CESM22/CAMS_withCONUS2017NEI/2017NEI_01latlon/wrfinput_d01*" /glade/derecho/scratch/madankuit/NEI/EPA2022v2_CONUS/wrfchem_T1_MOZCART_hourly/
+```
+
+### Process one month at a time on Derecho
+
+```bash
+cd /glade/derecho/scratch/madankuit/NEI/EPA2022v2_CONUS/wrfchem_T1_MOZCART_hourly/
+./anthro_emis < anthro_emis_T1_MOZCART_EPA2022_final.inp > anthro_emis.log 2>&1
+```
+
+Check mapping:
+
+```bash
+grep -i area anthro_emis.log
+```
+
+### Transfer processed hourly NEI files back to Svante
+
+```bash
+time rsync -avz --progress -e ssh /glade/derecho/scratch/madankuit/NEI/EPA2022v2_CONUS/wrfchem_T1_MOZCART_hourly/wrfchemi_d01_2022-12-* taoma528@svante9.mit.edu:/net/fs09/d0/taoma528/CESM22/CAMS_withCONUS2022v2NEI/NEI2022v2_T1_CONUS_output_01deg/
+```
+
+Archive month on Derecho:
+
+```bash
+mv /glade/derecho/scratch/madankuit/NEI/EPA2022v2_CONUS/wrfchem_T1_MOZCART_hourly/wrfchemi_d01_2022-12-* /glade/derecho/scratch/madankuit/NEI/EPA2022v2_CONUS/wrfchem_T1_MOZCART_hourly/hourly_files/
+```
+
+Estimated timing:
+
+- Processing: ~2.5 hr/month
+- Copying: ~3 hr/month
+
+## Species/Inventory Comparison Notes
+
+CAMS v5.1 vs v6.2 and NEI2017 vs NEI2022v2 comparison notes:
+
+- Common species count: 29 (CAMS comparison)
+- Only in v6.2: `chlorinated-hydrocarbons`, `co2_excl_short-cycle_org_C`, `co2_short-cycle_org_C`, `n2o`, `total-acids`, `total-ketones`
+- Only in v5.1: `acids`, `chlorinated-HC`, `ketones`
+- Common species count: 28 (NEI comparison)
+- Only in NEI2022: `E_CH3COOH`, `E_HCHOOH`, `E_MGLY`, `E_MVK`
+- Only in NEI2017: `E_ECI`, `E_ECJ`, `E_ORGI`, `E_SO4I`, `E_SO4J`
+
+## Scripts and Exact Output Paths
+
+### Step 2 merge (0.1 degree)
+
+Script:
+
+- `ModifiedFor2023_Merge_conusNEI2022v2_01degCAMS6.2_v2.py` (source workflow)
+- repo equivalent: `scripts/01_merge_nei_into_cams.py`
+
+Output path (intermediate hourly; may be removed after Step 3):
+
+`/net/fs09/d0/taoma528/CESM22/CAMS6.2_withCONUS2022v2NEI/globCAMS_conusNEI_01deg/2023_hourly/`
+
+Processing time estimate: ~6 hr/month for all species.
+
+### Step 3 combine by species
+
+Script:
+
+- `combine_hourly_globCAMS_conusNEI2022_to_species_01deg_v20260303.py` (source workflow)
+- repo equivalent: `scripts/03_combine_hourly_species_yearly.py`
+
+Output path:
+
+`/net/fs09/d0/taoma528/CESM22/CAMS6.2_withCONUS2022v2NEI/globCAMS_conusNEI_01deg/2023_GroupBySpecies/`
+
+### Step 4 regrid to ne0CONUSne30x8
+
+Script:
+
+- `Regrid_Emissions_ne0CONUSne30x8.py` (source workflow)
+- repo equivalent: `scripts/04_regrid_to_ne0conusne30x8.py`
+
+Output path:
+
+`/net/fs09/d0/taoma528/CESM22/CAMS6.2_withCONUS2022v2NEI/globCAMS_conusNEI_ne0CONUSne30x8/2023_CAMSSpecies/`
+
+### Step 5 species mapping
+
+Script:
+
+- `Species_Mapping_NEI2022v2_CAMSv6.2_ne0CONUSne30x8.ipynb`
+- mapping file in this repo: `config/species_mapping_template.dat`
+
+Output path:
+
+`/net/fs09/d0/taoma528/CESM22/CAMS6.2_withCONUS2022v2NEI/MappedSpecies_globCAMS_conusNEI_ne0CONUSne30x8/2023/`
+
+## Config and Code Design
+
+All runtime paths are centralized in one config file loaded by one shared module:
+
+- Config: `config/paths.json` (local/private; gitignored)
+- Loader: `src/nei_merge/settings.py`
+
+Scripts (`scripts/01-04`) import settings from that single module.
+
+## Quick Start (repo scripts)
 
 ```bash
 cp config/paths.example.json config/paths.json
-```
-
-2. Edit `config/paths.json` with your real directories/files and naming tokens (`inventory_name`, `merge_token`, `merged_label`, `cams_label`, `target_grid_label`).
-
-3. Run stages:
-
-```bash
 python3 scripts/01_merge_nei_into_cams.py --config config/paths.json
 python3 scripts/02_fix_time_coords.py --config config/paths.json
 python3 scripts/03_combine_hourly_species_yearly.py --config config/paths.json
 python3 scripts/04_regrid_to_ne0conusne30x8.py --config config/paths.json
 ```
-
-## Notes
-
-- `scripts/03_...` uses Dask (`dask.distributed`) for scalable multi-file processing.
-- `scripts/04_...` requires the NCAR `dsj` package path in config (`ncar_packages_dir`).
-- Species subsets can be set in config under `merge.species_subset`, `combine.species_subset`, and `regrid.species_subset`.
