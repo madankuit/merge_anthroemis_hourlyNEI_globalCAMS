@@ -42,6 +42,42 @@ Regrid Step-3 files to `ne0CONUSne30x8`.
 
 Apply species mapping for CAM-chem mechanism consistency.
 
+### Step 6: Zero Outside CONUS Mask
+
+Create files where values outside CONUS 80 km buffer are set to zero while preserving coordinates and overall structure.
+
+Script:
+
+- `scripts/ops_singularity/zero_outside_conus_mask_c20260325.py`
+
+Input path:
+
+`/net/fs09/d0/taoma528/CESM22/CAMS6.2_withCONUS2022v2NEI/MappedSpecies_globCAMS_conusNEI_ne0CONUSne30x8/2023/`
+
+Output path (as configured in script):
+
+`/net/fs09/d0/taoma528/CESM22/CAMS6.2_withCONUS2022v2NEI/MappedSpecies_globCAMS_conusNEI_ne0CONUSne30x8/2023_CONUSzeroOutside_temp/`
+
+### Step 7: Fix Header/Format for Run Compatibility
+
+Convert files to CAMS-compatible conventions used by existing model workflows (e.g., reorder dims, rename variable to `emiss`, convert time units/calendar, write CDF5).
+
+Script:
+
+- `scripts/ops_singularity/fix_header_to_cams_style.sh`
+
+Expected output subdirectory:
+
+`.../2023_CONUSzeroOutside_temp/fixed_camsstyle/`
+
+### Step 8: QA/Visualization Notebook
+
+Notebook-based checks for structure, time handling, and map/point diagnostics.
+
+Notebook:
+
+- `notebooks/Check_CAMSvsNEI_Emissions.ipynb`
+
 ## Operational Notes (Derecho <-> Svante)
 
 ### Copy CAMS v6.2 from Derecho to Svante
@@ -156,6 +192,11 @@ All runtime paths are centralized in one config file loaded by one shared module
 
 Scripts (`scripts/01-04`) import settings from that single module.
 
+Operational post-processing scripts captured from Svante are kept under:
+
+- `scripts/ops_singularity/`
+- `notebooks/`
+
 ## Quick Start (repo scripts)
 
 ```bash
@@ -164,4 +205,5 @@ python3 scripts/01_merge_nei_into_cams.py --config config/paths.json
 python3 scripts/02_fix_time_coords.py --config config/paths.json
 python3 scripts/03_combine_hourly_species_yearly.py --config config/paths.json
 python3 scripts/04_regrid_to_ne0conusne30x8.py --config config/paths.json
+# then run scripts/ops_singularity/* and notebooks/* in the Singularity workflow
 ```

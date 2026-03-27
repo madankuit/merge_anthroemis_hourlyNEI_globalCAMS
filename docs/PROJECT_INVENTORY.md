@@ -21,6 +21,15 @@ Purpose: Regrid merged species files from 0.1-degree lat/lon to ne0CONUSne30x8 v
 5. `NEIfileDatetime_shift_BYweekofday.py`
 Purpose: Weekday/weekend-preserving datetime shifts between NEI year and target output year.
 
+6. `zero_outside_conus_mask_c20260325.py`
+Purpose: Set values outside CONUS 80 km buffer to zero while preserving coordinate structure for additive workflow tests.
+
+7. `fix_header_to_cams_style.sh`
+Purpose: Post-process files to CAMS-style run compatibility (variable naming/dimension order/time encoding/CDF5 format).
+
+8. `Check_CAMSvsNEI_Emissions.ipynb`
+Purpose: Diagnostic checks/maps/point comparisons for structure and emissions differences.
+
 ## Main Path/Portability Issues Found
 
 - Hardcoded absolute paths in scripts (`/net/fs09/...`, `/home/...`).
@@ -32,3 +41,4 @@ Purpose: Weekday/weekend-preserving datetime shifts between NEI year and target 
 - Centralized runtime paths/settings into `config/paths.json` (external, not tracked).
 - Reworked scripts to use shared config loader and local helper modules.
 - Preserved original scripts under `originals/` for provenance.
+- Added operational Svante post-processing assets under `scripts/ops_singularity/` and `notebooks/`.
