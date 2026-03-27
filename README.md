@@ -64,11 +64,13 @@ python3 scripts/ops_singularity/zero_outside_conus_mask_c20260325.py --config co
 Normalize format for run compatibility (dimension order, variable naming, time encoding, CDF5), then validate with notebook checks.
 
 - Script: `scripts/ops_singularity/fix_header_to_cams_style.sh`
+- Condensed QA script: `scripts/ops_singularity/check_cams_vs_nei_emissions.py`
 - Notebook: `notebooks/NEI2022v2_CAMSv6.2.ipynb`
 - Run:
 
 ```bash
 bash scripts/ops_singularity/fix_header_to_cams_style.sh config/paths.json
+python3 scripts/ops_singularity/check_cams_vs_nei_emissions.py --config config/paths.json --species NO --month 2023-07
 ```
 
 ## Configuration
