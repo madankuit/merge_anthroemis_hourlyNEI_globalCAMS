@@ -17,6 +17,10 @@
     "merged_hourly_dir": "/net/fs09/d0/taoma528/CESM22/CAMS6.2_withCONUS2022v2NEI/globCAMS_conusNEI_01deg/2023_hourly_timeFixed",
     "merged_hourly_needs_timefix_dir": "/net/fs09/d0/taoma528/CESM22/CAMS6.2_withCONUS2022v2NEI/globCAMS_conusNEI_01deg/2023_hourly_NeedsCorrection",
     "merged_by_species_dir": "/net/fs09/d0/taoma528/CESM22/CAMS6.2_withCONUS2022v2NEI/globCAMS_conusNEI_01deg/2023_GroupBySpecies",
+    "mapped_species_dir": "/net/fs09/d0/taoma528/CESM22/CAMS6.2_withCONUS2022v2NEI/MappedSpecies_globCAMS_conusNEI_ne0CONUSne30x8/2023",
+    "conus_mask_80km_file": "/home/taoma528/Scripts/CESM_analysis/functions/ne0CONUSne30x8_np4_CONUSlandMaskedFalse_80kmBuffer.nc",
+    "conus_zerooutside_temp_dir": "/net/fs09/d0/taoma528/CESM22/CAMS6.2_withCONUS2022v2NEI/MappedSpecies_globCAMS_conusNEI_ne0CONUSne30x8/2023_CONUSzeroOutside_temp",
+    "conus_zerooutside_fixed_dir": "/net/fs09/d0/taoma528/CESM22/CAMS6.2_withCONUS2022v2NEI/MappedSpecies_globCAMS_conusNEI_ne0CONUSne30x8/2023_CONUSzeroOutside_temp/fixed_camsstyle",
     "map_npz": "/net/fs09/d0/taoma528/CESM22/GeographicMasks/CAMSgrid_to_NEIgrid_CONUSlower48_80kmBuffer_map.npz",
     "regridded_output_dir": "/net/fs09/d0/taoma528/CESM22/CAMS6.2_withCONUS2022v2NEI/globCAMS_conusNEI_ne0CONUSne30x8/2023_CAMSSpecies",
     "cams_grid_file": "/net/fs09/d0/taoma528/CESM22/grids/FV_gridinfo_CAMS_c20210219.nc",
@@ -42,6 +46,10 @@
     "species_subset": []
   },
   "regrid": {
+    "species_subset": []
+  },
+  "ops": {
+    "mask_all_ncol_vars": false,
     "species_subset": []
   }
 }

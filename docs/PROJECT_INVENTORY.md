@@ -42,3 +42,4 @@ Purpose: Diagnostic checks/maps/point comparisons for structure and emissions di
 - Reworked scripts to use shared config loader and local helper modules.
 - Preserved original scripts under `originals/` for provenance.
 - Added operational Svante post-processing assets under `scripts/ops_singularity/` and `notebooks/`.
+- Refactored operational scripts to load paths from config instead of hardcoded absolute paths.

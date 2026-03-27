@@ -54,9 +54,15 @@ Input path:
 
 `/net/fs09/d0/taoma528/CESM22/CAMS6.2_withCONUS2022v2NEI/MappedSpecies_globCAMS_conusNEI_ne0CONUSne30x8/2023/`
 
-Output path (as configured in script):
+Run:
 
-`/net/fs09/d0/taoma528/CESM22/CAMS6.2_withCONUS2022v2NEI/MappedSpecies_globCAMS_conusNEI_ne0CONUSne30x8/2023_CONUSzeroOutside_temp/`
+```bash
+python3 scripts/ops_singularity/zero_outside_conus_mask_c20260325.py --config config/paths.json
+```
+
+Output path (from config):
+
+`paths.conus_zerooutside_temp_dir`
 
 ### Step 7: Fix Header/Format for Run Compatibility
 
@@ -66,9 +72,15 @@ Script:
 
 - `scripts/ops_singularity/fix_header_to_cams_style.sh`
 
-Expected output subdirectory:
+Run:
 
-`.../2023_CONUSzeroOutside_temp/fixed_camsstyle/`
+```bash
+bash scripts/ops_singularity/fix_header_to_cams_style.sh config/paths.json
+```
+
+Expected output directory (from config):
+
+`paths.conus_zerooutside_fixed_dir`
 
 ### Step 8: QA/Visualization Notebook
 
@@ -196,6 +208,8 @@ Operational post-processing scripts captured from Svante are kept under:
 
 - `scripts/ops_singularity/`
 - `notebooks/`
+
+Operational scripts are also config-driven and do not require hardcoded paths in script bodies.
 
 ## Quick Start (repo scripts)
 

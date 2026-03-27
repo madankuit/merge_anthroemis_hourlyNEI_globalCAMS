@@ -1,9 +1,43 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-IN="/net/fs09/d0/taoma528/CESM22/CAMS6.2_withCONUS2022v2NEI/MappedSpecies_globCAMS_conusNEI_ne0CONUSne30x8/2023_CONUSzeroOutside_temp"
-OUT="${IN}/fixed_camsstyle"
-DATE_TAG="c20260224"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+CONFIG_JSON="${1:-${REPO_ROOT}/config/paths.json}"
+
+IN="$(python - "$CONFIG_JSON" <<'PY'
+import json, sys
+cfg = json.load(open(sys.argv[1]))
+paths = cfg["paths"]
+workflow = cfg["workflow"]
+in_dir = paths.get("conus_zerooutside_temp_dir")
+if not in_dir:
+    in_dir = f"{paths['mapped_species_dir']}/{workflow['output_year']}_CONUSzeroOutside_temp"
+print(in_dir)
+PY
+)"
+
+OUT="$(python - "$CONFIG_JSON" <<'PY'
+import json, os, sys
+cfg = json.load(open(sys.argv[1]))
+paths = cfg["paths"]
+workflow = cfg["workflow"]
+out_dir = paths.get("conus_zerooutside_fixed_dir")
+if not out_dir:
+    base = paths.get("conus_zerooutside_temp_dir")
+    if not base:
+        base = f"{paths['mapped_species_dir']}/{workflow['output_year']}_CONUSzeroOutside_temp"
+    out_dir = os.path.join(base, "fixed_camsstyle")
+print(out_dir)
+PY
+)"
+
+DATE_TAG="$(python - "$CONFIG_JSON" <<'PY'
+import json, sys
+cfg = json.load(open(sys.argv[1]))
+print(cfg["workflow"]["date_tag"])
+PY
+)"
 
 mkdir -p "$OUT"
 
