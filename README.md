@@ -48,7 +48,7 @@ Map species to CAM-chem mechanism (TS1/T1-compatible mapping used in this workfl
 - Mapping template: `config/species_mapping_template.dat`
 - Historical mapping notebook reference: `Species_Mapping_NEI2022v2_CAMSv6.2_ne0CONUSne30x8.ipynb`
 
-### Step 7: Zero emissions outside CONUS mask (today's addition)
+### Step 7: Zero emissions outside CONUS mask
 
 Set values to zero outside CONUS 80 km buffer while keeping file structure.
 
@@ -59,7 +59,7 @@ Set values to zero outside CONUS 80 km buffer while keeping file structure.
 python3 scripts/ops_singularity/zero_outside_conus_mask_c20260325.py --config config/paths.json
 ```
 
-### Step 8: Fix NetCDF header/format to CAMS style + QA (today's addition)
+### Step 8: Fix NetCDF header/format to CAMS style + QA
 
 Normalize format for run compatibility (dimension order, variable naming, time encoding, CDF5), then validate with notebook checks.
 
