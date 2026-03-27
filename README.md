@@ -88,7 +88,7 @@ Notebook-based checks for structure, time handling, and map/point diagnostics.
 
 Notebook:
 
-- `notebooks/Check_CAMSvsNEI_Emissions.ipynb`
+- `notebooks/NEI2022v2_CAMSv6.2.ipynb`
 
 ## Operational Notes (Derecho <-> Svante)
 
@@ -208,6 +208,13 @@ Operational post-processing scripts captured from Svante are kept under:
 
 - `scripts/ops_singularity/`
 - `notebooks/`
+- legacy notebook retained for provenance: `originals/legacy_notebooks/Check_CAMSvsNEI_Emissions.ipynb`
+
+Notebook runtime config keys also include:
+
+- `paths.cams_ne0conus_monthly_dir`
+- `paths.mapped_species_dir`
+- `paths.conus_mask_80km_file`
 
 Operational scripts are also config-driven and do not require hardcoded paths in script bodies.
 

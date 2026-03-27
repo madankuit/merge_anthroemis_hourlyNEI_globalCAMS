@@ -18,6 +18,7 @@
     "merged_hourly_needs_timefix_dir": "/net/fs09/d0/taoma528/CESM22/CAMS6.2_withCONUS2022v2NEI/globCAMS_conusNEI_01deg/2023_hourly_NeedsCorrection",
     "merged_by_species_dir": "/net/fs09/d0/taoma528/CESM22/CAMS6.2_withCONUS2022v2NEI/globCAMS_conusNEI_01deg/2023_GroupBySpecies",
     "mapped_species_dir": "/net/fs09/d0/taoma528/CESM22/CAMS6.2_withCONUS2022v2NEI/MappedSpecies_globCAMS_conusNEI_ne0CONUSne30x8/2023",
+    "cams_ne0conus_monthly_dir": "/net/fs09/d0/taoma528/ncar_copies/acom/MUSICA/emissions/cams/CAMS-GLOB-ANT_v6.2/ne0CONUSne30x8",
     "conus_mask_80km_file": "/home/taoma528/Scripts/CESM_analysis/functions/ne0CONUSne30x8_np4_CONUSlandMaskedFalse_80kmBuffer.nc",
     "conus_zerooutside_temp_dir": "/net/fs09/d0/taoma528/CESM22/CAMS6.2_withCONUS2022v2NEI/MappedSpecies_globCAMS_conusNEI_ne0CONUSne30x8/2023_CONUSzeroOutside_temp",
     "conus_zerooutside_fixed_dir": "/net/fs09/d0/taoma528/CESM22/CAMS6.2_withCONUS2022v2NEI/MappedSpecies_globCAMS_conusNEI_ne0CONUSne30x8/2023_CONUSzeroOutside_temp/fixed_camsstyle",

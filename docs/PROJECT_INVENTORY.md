@@ -27,8 +27,8 @@ Purpose: Set values outside CONUS 80 km buffer to zero while preserving coordina
 7. `fix_header_to_cams_style.sh`
 Purpose: Post-process files to CAMS-style run compatibility (variable naming/dimension order/time encoding/CDF5 format).
 
-8. `Check_CAMSvsNEI_Emissions.ipynb`
-Purpose: Diagnostic checks/maps/point comparisons for structure and emissions differences.
+8. `NEI2022v2_CAMSv6.2.ipynb`
+Purpose: Clean diagnostic checks for NEI2022v2 + CAMS v6.2 only, with config-driven paths and reduced repetitive legacy content.
 
 ## Main Path/Portability Issues Found
 
@@ -43,3 +43,4 @@ Purpose: Diagnostic checks/maps/point comparisons for structure and emissions di
 - Preserved original scripts under `originals/` for provenance.
 - Added operational Svante post-processing assets under `scripts/ops_singularity/` and `notebooks/`.
 - Refactored operational scripts to load paths from config instead of hardcoded absolute paths.
+- Renamed/cleaned diagnostics notebook to `notebooks/NEI2022v2_CAMSv6.2.ipynb`; legacy copy moved to `originals/legacy_notebooks/`.
