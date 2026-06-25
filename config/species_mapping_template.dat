@@ -7,8 +7,8 @@
 # (3) molecular weights of species for emission species 
 # -> this is for the case that original emission files have wrong molecular weights or no information. 
 # === File locations Start ===
-Source_fileformat = '/net/fs09/d0/taoma528/CESM22/CAMS6.2_withCONUS2022v2NEI/globCAMS_conusNEI_ne0CONUSne30x8/2023_CAMSSpecies/Y2023_CAMS-GLOB-ANTv6.2_conusNEI2022v2_ne0CONUSne30x8_*_c20260224.nc'
-Destination_fileformat = '/net/fs09/d0/taoma528/CESM22/CAMS6.2_withCONUS2022v2NEI/MappedSpecies_globCAMS_conusNEI_ne0CONUSne30x8/2023/Y2023_CAMS-GLOB-ANTv6.2_conusNEI2022v2_ne0CONUSne30x8_SPC_c20260224.nc'
+Source_fileformat = '<DATA_ROOT>/globCAMS_conusNEI_ne0CONUSne30x8/2023_CAMSSpecies/Y2023_CAMS-GLOB-ANTv6.2_conusNEI2022v2_ne0CONUSne30x8_*_c20260224.nc'
+Destination_fileformat = '<DATA_ROOT>/MappedSpecies_globCAMS_conusNEI_ne0CONUSne30x8/2023/Y2023_CAMS-GLOB-ANTv6.2_conusNEI2022v2_ne0CONUSne30x8_SPC_c20260224.nc'
 Source_unit = 'kg m-2 s-1'
 Destination_unit = 'molecules cm-2 s-1'
 species_list = 'All'

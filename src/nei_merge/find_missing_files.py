@@ -73,7 +73,7 @@ def find_missing_files_v1(startDatetime, endDatetime, filedir, file_prefix):
 # # Example usage
 # startDatetime = '2017-07-01_03:00:00'
 # endDatetime = '2017-07-03_00:00:00'
-# filedir = '/net/fs09/d0/taoma528/CESM22/CAMS_withCONUS2017NEI/NEI2017_CONUS_output_01deg/'
+# filedir = '<DATA_ROOT>/NEI_CONUS_output_01deg/'
 # file_prefix = 'wrfchemi_d01'
 # missing_files = find_missing_files_v1(startDatetime, endDatetime, filedir,file_prefix)
 

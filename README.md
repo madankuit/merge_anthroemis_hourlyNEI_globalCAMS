@@ -11,6 +11,38 @@ Current documented workflow is for:
 - Target year: `2023`
 - Grid: `ne0CONUSne30x8`
 
+> **Note on years.** The hourly NEI inventory is `NEI2022v2` (base year 2022). To run
+> other simulation years (e.g. 2023, 2024) the NEI filenames are remapped to preserve
+> day-of-week (weekday/weekend) patterns — see `src/nei_merge/time_shift.py` and
+> `workflow.nei_actual_year` / `workflow.output_year` in the config.
+
+## Repository Layout
+
+Every folder has its own README with details. Quick map:
+
+| Folder | What's in it |
+|--------|--------------|
+| [`scripts/`](scripts/README.md) | Run-ready, config-driven workflow steps `01`–`04` + SLURM wrapper. |
+| [`scripts/ops_singularity/`](scripts/ops_singularity/README.md) | Post-processing & QA (zero-outside-CONUS, CAMS-style header fix, QA script). |
+| [`src/nei_merge/`](src/nei_merge/README.md) | Shared helper package: config loader, settings schema, day-of-week time shift, missing-file finder. |
+| [`config/`](config/README.md) | All machine-specific paths/settings (templates + the author's real-path reference). |
+| [`notebooks/`](notebooks/README.md) | Interactive QA / diagnostics. |
+| [`originals/`](originals/README.md) | Unmodified original scripts, kept verbatim for provenance (still contain hardcoded paths — do not run as-is). |
+| [`docs/`](docs/README.md) | Project inventory mapping original scripts → cleaned repo. |
+
+## External dependencies
+
+- **Python environment** — see `requirements.txt` (xarray, numpy, pandas, dask, netCDF4, etc.).
+- **ESMF conservative regridding (Step 5 only).** `scripts/04_regrid_to_ne0conusne30x8.py`
+  imports a regridding utility (`Regridding_ESMF`) from an **external NCAR package by
+  Duseong Jo (NCAR/ACOM)**, located via the `ncar_packages_dir` config key. This package
+  is **not redistributed here.** To run Step 5 you need either that package or an
+  equivalent ESMF/`esmpy` regridder. An M. Tao–revised copy of the same engine
+  (`functions/Regridding_ESMF_MTv1.py`) is available in the companion repository
+  [`MUSICAv0-workflows`](https://github.com/madankuit/MUSICAv0-workflows). Steps 1–4 do
+  not need it. (If you regrid to your own grid, you can substitute your own regridder at
+  this step.)
+
 ## Workflow (Numbered)
 
 ### Step 1: Preprocess NEI to 0.1° CONUS grid
@@ -75,11 +107,16 @@ python3 scripts/ops_singularity/check_cams_vs_nei_emissions.py --config config/p
 
 ## Configuration
 
-All runtime paths are in one external file:
+All runtime paths live in one external file — the active scripts/notebooks contain
+**no hardcoded server paths**. See [`config/README.md`](config/README.md) for the full
+schema. The three config files:
 
-- `config/paths.json` (copy from `config/paths.example.json`)
-
-No hardcoded server paths are required in active repo scripts/notebook.
+- `config/paths.example.json` — **template for new users.** Placeholder paths; copy to
+  `config/paths.json` and edit for your system.
+- `config/paths.json` — what the scripts actually read (`--config config/paths.json`).
+  Gitignored; local to each machine.
+- `config/paths.svante.json` — the author's real Svante paths, tracked so they stay in
+  sync between machines. On Svante just `cp config/paths.svante.json config/paths.json`.
 
 Key path entries used by the final steps:
 
@@ -103,5 +140,20 @@ bash scripts/ops_singularity/fix_header_to_cams_style.sh config/paths.json
 
 ## Legacy/Provenance
 
+- Unmodified original scripts are preserved under [`originals/`](originals/README.md)
+  (these still contain hardcoded paths and are kept only as a historical record).
 - Legacy crowded diagnostics notebook (archived):
   `originals/legacy_notebooks/Check_CAMSvsNEI_Emissions.ipynb`
+
+## Acknowledgements
+
+- **CAMS-GLOB-ANT v6.2** anthropogenic emissions (ECMWF/CAMS).
+- **NEI2022v2** (US EPA National Emissions Inventory); preprocessed to hourly CONUS files
+  with the NCAR `epa_anthro_emis` tool.
+- **ESMF conservative regridding** utilities by **Duseong Jo (NCAR/ACOM)** — used at the
+  regrid-to-`ne0CONUSne30x8` step (see *External dependencies* above).
+- Workflow assembled by **M. Tao** for MUSICAv0 / CAM-chem regional simulations.
+
+## License
+
+See [`LICENSE`](LICENSE).
