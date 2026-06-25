@@ -30,11 +30,11 @@ def find_missing_files_v1(startDatetime, endDatetime, filedir, file_prefix):
         list: List of missing file names.
 
     Example:
-        startDatetime = '2018-07-01_03:00:00'
-        endDatetime = '2018-07-03_00:00:00'
+        startDatetime = '2023-07-01_03:00:00'
+        endDatetime = '2023-07-03_00:00:00'
         file_prefix = 'wrfchemi_d01'
-        missing_files = find_missing_files_v1(startDatetime, endDatetime, file_prefix)
-        print(missing_files)  # Print the missing files.
+        result = find_missing_files_v1(startDatetime, endDatetime, filedir, file_prefix)
+        print(result['missing_files'])  # Print the missing files.
     """
 
     # Convert startDatetime and endDatetime strings to datetime objects
@@ -100,11 +100,11 @@ def find_missing_files_v2(startDatetime, endDatetime, filedir, file_prefix, file
         list: List of missing file names.
 
     Example:
-        startDatetime = '2018-07-01T00:00:00'
-        endDatetime = '2018-07-02T00:00:00'
-        file_prefix = 'CAMS-GLOB-ANT_v5.1_'+CAMSorigName+'_MergedNEI2017WDKadjusted'
-        missing_files = find_missing_files_v2(startDatetime, endDatetime, file_prefix)
-        print(missing_files)  # Print the missing files.
+        startDatetime = '2023-01-01T00:00:00'
+        endDatetime = '2023-12-30T23:00:00'
+        file_prefix = 'CAMS-GLOB-ANT_Glb_0.1x0.1_anthro_co_v6.2_monthly_conusNEI2022v2WDKadjusted'
+        result = find_missing_files_v2(startDatetime, endDatetime, filedir, file_prefix, '.nc')
+        print(result['missing_files'])  # Print the missing files.
     """
 
     # Convert startDatetime and endDatetime strings to datetime objects

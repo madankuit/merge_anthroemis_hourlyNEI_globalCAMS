@@ -51,14 +51,16 @@ def main() -> None:
 
     date_tag = workflow["date_tag"]
     output_year = int(workflow["output_year"])
+    cams_label = workflow.get("cams_label", "CAMS-GLOB-ANTv6.2")
+    merged_label = workflow.get("merged_label", "conusNEI2022v2")
+    grid_label = workflow.get("target_grid_label", "ne0CONUSne30x8")
+    mapped_stem = f"Y{output_year}_{cams_label}_{merged_label}_{grid_label}"
 
     mapped_dir = Path(paths["mapped_species_dir"])
     cams_dir = Path(paths["cams_ne0conus_monthly_dir"])
     mask_file = Path(paths["conus_mask_80km_file"])
 
-    rx_nei = re.compile(
-        rf"Y{output_year}_CAMS-GLOB-ANTv6\.2_conusNEI2022v2_ne0CONUSne30x8_(?P<spc>.+?)_{date_tag}\.nc$"
-    )
+    rx_nei = re.compile(rf"{re.escape(mapped_stem)}_(?P<spc>.+?)_{re.escape(date_tag)}\.nc$")
     rx_cams = re.compile(r"CAMS-GLOB-ANT_ne0conus30x8_(?P<spc>.+?)_v6\.2_monthly\.nc$")
 
     mapped_species = species_from_files(mapped_dir, rx_nei)
@@ -77,9 +79,7 @@ def main() -> None:
         print("Only CAMS  :", only_cams)
 
     spc = args.species
-    mapped_file = mapped_dir / (
-        f"Y{output_year}_CAMS-GLOB-ANTv6.2_conusNEI2022v2_ne0CONUSne30x8_{spc}_{date_tag}.nc"
-    )
+    mapped_file = mapped_dir / f"{mapped_stem}_{spc}_{date_tag}.nc"
     cams_file = cams_dir / f"CAMS-GLOB-ANT_ne0conus30x8_{spc}_v6.2_monthly.nc"
 
     if not mapped_file.exists():

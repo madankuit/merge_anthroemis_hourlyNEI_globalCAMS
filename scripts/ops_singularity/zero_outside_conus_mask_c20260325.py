@@ -56,14 +56,14 @@ def main() -> None:
 
     os.makedirs(out_dir, exist_ok=True)
 
-    pattern = os.path.join(
-        in_dir,
-        f"Y{year}_CAMS-GLOB-ANTv6.2_conusNEI2022v2_ne0CONUSne30x8_*_{date_tag}.nc",
-    )
+    cams_label = workflow.get("cams_label", "CAMS-GLOB-ANTv6.2")
+    merged_label = workflow.get("merged_label", "conusNEI2022v2")
+    grid_label = workflow.get("target_grid_label", "ne0CONUSne30x8")
+    stem = f"Y{year}_{cams_label}_{merged_label}_{grid_label}"
+
+    pattern = os.path.join(in_dir, f"{stem}_*_{date_tag}.nc")
     files = sorted(glob.glob(pattern))
-    rx = re.compile(
-        rf"Y{year}_CAMS-GLOB-ANTv6\.2_conusNEI2022v2_ne0CONUSne30x8_(?P<spc>.+?)_{date_tag}\.nc"
-    )
+    rx = re.compile(rf"{re.escape(stem)}_(?P<spc>.+?)_{re.escape(date_tag)}\.nc")
 
     mask = xr.open_dataarray(mask_path).astype(bool)
     if "ncol" not in mask.dims:
