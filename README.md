@@ -147,11 +147,14 @@ bash scripts/ops_singularity/fix_header_to_cams_style.sh config/paths.json
 
 ## Acknowledgements
 
+- **Gabriele (Gabi) Pfister (NCAR/ACOM)** — for guidance and assistance with the
+  **NEI2022v2** anthropogenic emissions processing (the `epa_anthro_emis` preprocessing to
+  hourly CONUS 0.1° files that feeds Step 1 of this workflow).
+- **Duseong Jo (NCAR/ACOM)** — for the **ESMF conservative regridding** utilities
+  (`Regridding_ESMF`) used at the regrid-to-`ne0CONUSne30x8` step (see *External
+  dependencies* above).
 - **CAMS-GLOB-ANT v6.2** anthropogenic emissions (ECMWF/CAMS).
-- **NEI2022v2** (US EPA National Emissions Inventory); preprocessed to hourly CONUS files
-  with the NCAR `epa_anthro_emis` tool.
-- **ESMF conservative regridding** utilities by **Duseong Jo (NCAR/ACOM)** — used at the
-  regrid-to-`ne0CONUSne30x8` step (see *External dependencies* above).
+- **NEI2022v2** — US EPA National Emissions Inventory.
 - Workflow assembled by **M. Tao** for MUSICAv0 / CAM-chem regional simulations.
 
 ## License
